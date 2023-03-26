@@ -16,7 +16,7 @@ body {
 #game {
   position: relative;
   width: 50vw;
-  height: 50vh;
+  height: 80vh;
   background-color: #FAF9F6;
   cursor: none;
   border: darkgrey;
