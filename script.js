@@ -4,6 +4,9 @@ let counter = 0;
 let blue = true;
 const initialAnimationDuration = 3; // seconds
 
+//set score to 0 intitially
+document.getElementById("scoreSpan").innerHTML = Math.floor(counter);
+
 game.addEventListener('mousemove', (event) => {
   const gameRect = game.getBoundingClientRect();
   const x = event.clientX - gameRect.left + 10;
