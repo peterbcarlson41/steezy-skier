@@ -10,6 +10,20 @@ game.addEventListener('mousemove', (event) => {
   }
 });
 
+function checkCollision() {
+  const skierRect = skier.getBoundingClientRect();
+  const gates = document.querySelectorAll('.gate');
+
+  gates.forEach(gate => {
+    const gateRect = gate.getBoundingClientRect();
+    if (skierRect.bottom >= gateRect.top && skierRect.top <= gateRect.bottom &&
+        skierRect.right >= gateRect.left && skierRect.left <= gateRect.right) {
+      console.log('Collision detected!');
+      // handle collision here, such as game over or score increment
+    }
+  });
+}
+
 function createGate() {
   const gate = document.createElement('div');
   gate.classList.add('gate');
@@ -23,3 +37,4 @@ function createGate() {
 }
 
 setInterval(createGate, 1000);
+setInterval(checkCollision, 10);
