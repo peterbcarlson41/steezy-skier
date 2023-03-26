@@ -2,6 +2,7 @@ const game = document.getElementById('game');
 const skier = document.getElementById('skier');
 let counter = 0;
 let blue = true;
+const initialAnimationDuration = 3; // seconds
 
 game.addEventListener('mousemove', (event) => {
   const gameRect = game.getBoundingClientRect();
@@ -18,32 +19,33 @@ function checkCollision() {
 
   gates.forEach(gate => {
     const gateRect = gate.getBoundingClientRect();
+    counter++;
+    document.getElementById("scoreSpan").innerHTML = Math.floor(counter + 1);
     if (skierRect.bottom >= gateRect.top && skierRect.top <= gateRect.bottom &&
         skierRect.right >= gateRect.left && skierRect.left <= gateRect.right) {
-      console.log('Collision detected!');
       // handle collision here, such as game over or score increment
-      alert("You hit a gate. score: "+Math.floor(counter/100));
+      alert("You hit a gate. score: "+Math.floor(counter));
       counter=0;
     }
     else {
       if (gate.style.backgroundColor == "red") {
         if (skierRect.bottom >= gateRect.top && skierRect.left <= gateRect.right && skierRect.top <= gateRect.bottom) {
-          alert("You missed a red gate. score: "+ Math.floor(counter/100));
+          alert("You missed a red gate. score: "+ Math.floor(counter));
           counter=0;
         }
       }
       if (gate.style.backgroundColor == "blue"){
         //if the gate is blue, the skier should be on the left side of the gate before the top of the gate passes the bottom of the skier
         if (skierRect.bottom >= gateRect.top && skierRect.right >= gateRect.left && skierRect.top <= gateRect.bottom) {
-          alert("You missed a blue gate. score: "+Math.floor(counter/100));
+          alert("You missed a blue gate. score: "+Math.floor(counter));
           counter=0;
         }
       }
-      counter++;
-      document.getElementById("scoreSpan").innerHTML = Math.floor(counter/100);
     }
   });
 }
+
+let currentAnimationDuration = initialAnimationDuration;
 
 function createGate() {
   const gate = document.createElement('div');
@@ -56,6 +58,9 @@ function createGate() {
 
   gate.style.left = `${gatePosition}px`;
   gate.style.backgroundColor = blue ? 'blue' : 'red';
+
+  // Set the initial animation duration
+  gate.style.animationDuration = `${currentAnimationDuration}s`;
   game.appendChild(gate);
 
   //alternate the value of blue
@@ -64,10 +69,20 @@ function createGate() {
   gate.addEventListener('animationend', () => {
     gate.remove();
   });
+
+  // Decrease the animation duration after every gate is created, only to a point
+  console.log(currentAnimationDuration);
+  if (currentAnimationDuration >= 1) {
+    currentAnimationDuration -= 0.01;
+  } 
+
+  // Calculate the next interval based on the current animation duration
+  const nextInterval = currentAnimationDuration * 1000 / 2;
+
+  // Create the next gate after the calculated interval
+  setTimeout(createGate, nextInterval);
 }
 
-
-
-
-setInterval(createGate, 1000);
+// Start creating gates
+setTimeout(createGate, currentAnimationDuration * 1000);
 setInterval(checkCollision, 10);
